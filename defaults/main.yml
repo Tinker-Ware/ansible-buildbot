@@ -10,3 +10,4 @@ buildbot_path: "{{ ansible_env.HOME }}/buildbot"
 buildbot_url: http://localhost:8010/
 buildbot_title: Tinkerware
 buildbot_web_port: 8010
+project_url: http://divmod.org/trac/wiki/DivmodPyflakes
