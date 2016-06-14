@@ -1,0 +1,8 @@
+---
+
+- name: Install Buildbot CI
+  apt: name=buildbot state=present
+  sudo: true
+
+- name: Create master
+  
