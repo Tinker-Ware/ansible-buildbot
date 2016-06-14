@@ -1,1 +1,12 @@
 ---
+user: vagrant
+master_name: master
+master_host: localhost
+master_port: 9989
+slave_name: slave
+slave_username: example-slave
+slave_pass: pass
+buildbot_path: "{{ ansible_env.HOME }}/buildbot"
+buildbot_url: http://localhost:8010/
+buildbot_title: Tinkerware
+buildbot_web_port: 8010
