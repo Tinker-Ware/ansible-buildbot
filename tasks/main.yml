@@ -21,13 +21,9 @@
     src=master.cfg
     dest={{ buildbot_path }}/{{ master_name }}/master.cfg
     owner={{ user }}
-  when: master_creation|success
+  when: not master_creation|skipped
   register: master_config
-
-- name: Start master
-  command: buildbot start {{ master_name }}
-    chdir="{{ buildbot_path }}"
-  when: master_config|success
+  notify: start_master
 
 - name: Create slave
   command: buildslave create-slave {{ slave_name }} {{ master_host }}:{{ master_port }} {{ slave_username }} {{ slave_pass }}
@@ -39,4 +35,4 @@
 - name: Start slave
   command: buildslave start slave
     chdir="{{ buildbot_path }}"
-  when: slave_creation|success
+  when: not slave_creation|skipped
