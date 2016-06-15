@@ -1,0 +1,4 @@
+---
+- name: start_master
+  command: buildbot restart {{ master_name }}
+    chdir="{{ buildbot_path }}"
