@@ -21,9 +21,14 @@
     src=master.cfg
     dest={{ buildbot_path }}/{{ master_name }}/master.cfg
     owner={{ user }}
-  when: not master_creation|skipped
   register: master_config
   notify: start_master
+  when: master_name is defined
+
+- name: (re)start_master
+  command: buildbot restart {{ master_name }}
+    chdir="{{ buildbot_path }}"
+  when: master_config|success and master_name is defined and slave_name is undefined
 
 - name: Create slave
   command: buildslave create-slave {{ slave_name }} {{ master_host }}:{{ master_port }} {{ slave_username }} {{ slave_pass }}
@@ -32,7 +37,7 @@
   when: slave_name is defined
   register: slave_creation
 
-- name: Start slave
-  command: buildslave start slave
+- name: (re)start_slave
+  command: buildslave restart {{ slave_name }}
     chdir="{{ buildbot_path }}"
-  when: not slave_creation|skipped
+  when: master_config|skipped and slave_name is defined and master_name is undefined
