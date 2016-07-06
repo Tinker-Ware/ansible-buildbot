@@ -1,0 +1,46 @@
+---
+- name: Download BB9
+  get_url:
+    url="{{ bb_slave_tarball }}"
+    dest=/tmp/bb9slave.tar.gz
+
+- name: Ensure directory for untar
+  file:
+    path: "/tmp/bb9"
+    state: directory
+
+- name: Untar BB9
+  unarchive:
+    src=/tmp/bb9slave.tar.gz
+    dest=/tmp/bb9/
+
+- name: build bb9
+  command: python setup.py build
+    chdir="/tmp/bb9/buildbot-slave-0.9.0b1"
+  sudo: yes
+
+- name: install bb9
+  command: python setup.py install
+    chdir="/tmp/bb9/buildbot-slave-0.9.0b1"
+  sudo: yes
+
+- name: Download packages for Upgrade
+  pip:
+    name={{ item }}
+  with_items:
+    - "{{ bb_waterfall_tarball }}"
+    - "{{ bb_www_tarball }}"
+    - "{{ bb_consoleview_tarball }}"
+  sudo: true
+
+- name: Create slave
+  command: buildslave create-slave {{ slave_name }} {{ master_host }}:{{ master_port }} {{ slave_username }} {{ slave_pass }}
+    chdir="{{ buildbot_path }}"
+    creates="{{ buildbot_path }}/{{ slave_name }}"
+  when: slave_name is defined
+  register: slave_creation
+
+- name: (re)start_slave
+  command: buildslave restart {{ slave_name }}
+    chdir="{{ buildbot_path }}"
+  when: slave_name is defined

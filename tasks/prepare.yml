@@ -1,0 +1,9 @@
+---
+- name: Install Buildbot CI
+  apt: name=buildbot state=present
+  sudo: true
+
+- name: Ensure directory for Buildbot is there
+  file:
+    dest: "{{ buildbot_path }}"
+    state: directory

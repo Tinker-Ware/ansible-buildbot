@@ -1,0 +1,54 @@
+- name: Download BB9
+  get_url:
+    url="{{ bb_master_tarball }}"
+    dest=/tmp/bb9.tar.gz
+
+- name: Ensure directory for untar
+  file:
+    path: "/tmp/bb9"
+    state: directory
+
+- name: Untar BB9
+  unarchive:
+    src=/tmp/bb9.tar.gz
+    dest=/tmp/bb9/
+
+- name: build bb9
+  command: python setup.py build
+    chdir="/tmp/bb9/buildbot-0.9.0b1"
+  sudo: yes
+
+- name: install bb9
+  command: python setup.py install
+    chdir="/tmp/bb9/buildbot-0.9.0b1"
+  sudo: yes
+
+- name: Download packages for Upgrade
+  pip:
+    name={{ item }}
+  with_items:
+    - "{{ bb_waterfall_tarball }}"
+    - "{{ bb_www_tarball }}"
+    - "{{ bb_consoleview_tarball }}"
+  sudo: true
+
+- name: Create master
+  command: buildbot create-master {{ master_name }}
+    chdir="{{ buildbot_path }}"
+    creates="{{ buildbot_path }}/{{ master_name }}"
+  when: master_name is defined
+  register: master_creation
+
+- name: Configure master
+  template:
+    src=master.cfg.0.9
+    dest={{ buildbot_path }}/{{ master_name }}/master.cfg
+    owner={{ user }}
+  register: master_config
+  notify: start_master
+  when: master_name is defined
+
+- name: (re)start_master
+  command: buildbot restart {{ master_name }}
+    chdir="{{ buildbot_path }}"
+  when: master_name is defined
