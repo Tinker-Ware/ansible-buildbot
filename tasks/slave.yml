@@ -16,12 +16,12 @@
 
 - name: build bb9
   command: python setup.py build
-    chdir="/tmp/bb9/buildbot-slave-0.9.0b1"
+    chdir="/tmp/bb9/buildbot-worker-0.9.0b9"
   sudo: yes
 
 - name: install bb9
   command: python setup.py install
-    chdir="/tmp/bb9/buildbot-slave-0.9.0b1"
+    chdir="/tmp/bb9/buildbot-worker-0.9.0b9"
   sudo: yes
 
 - name: Download packages for Upgrade
