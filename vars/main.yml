@@ -1,6 +1,12 @@
 ---
-bb_master_tarball: https://pypi.python.org/packages/04/78/4d9faa562ef187275d706ad1756cd5973947943008c933e26de6518a9506/buildbot-0.9.0b1.tar.gz#md5=6afcf9c4ae3e3255aec8f96723fd8a9a
-bb_slave_tarball: https://pypi.python.org/packages/88/86/c5be3219ea55ce0979fae1bad17b875d3d6abeb57d2dc229ddfe7b9733c5/buildbot-slave-0.9.0b1.tar.gz#md5=1e7a233951408c467ca7ea1bafdf73ff
-bb_waterfall_tarball: https://pypi.python.org/packages/73/2f/51675484a34cc4d475d27aa8a693b6a768c4095705e1b4b3946725335902/buildbot_waterfall_view-0.9.0b1-py2-none-any.whl#md5=6d4e8240194bfbf402b27e676b842225
-bb_www_tarball: https://pypi.python.org/packages/ac/bd/012f4042611755d561adde36f591b8118ac16423988071a57ef0e569e5a5/buildbot_www-0.9.0b1-py2-none-any.whl#md5=7c6657da911f543cbf186f0dd4c2cea8
-bb_consoleview_tarball: https://pypi.python.org/packages/b5/de/893cfaa6519690a28044391bf250c5fd421e6dadc107211e6a3e65b859cf/buildbot_console_view-0.9.0b1-py2-none-any.whl#md5=de442fb4a9c5181954e3388a35c55dde
+# bb_master_tarball: https://pypi.python.org/packages/04/78/4d9faa562ef187275d706ad1756cd5973947943008c933e26de6518a9506/buildbot-0.9.0b1.tar.gz#md5=6afcf9c4ae3e3255aec8f96723fd8a9a
+# bb_slave_tarball: https://pypi.python.org/packages/88/86/c5be3219ea55ce0979fae1bad17b875d3d6abeb57d2dc229ddfe7b9733c5/buildbot-slave-0.9.0b1.tar.gz#md5=1e7a233951408c467ca7ea1bafdf73ff
+# bb_waterfall_tarball: https://pypi.python.org/packages/73/2f/51675484a34cc4d475d27aa8a693b6a768c4095705e1b4b3946725335902/buildbot_waterfall_view-0.9.0b1-py2-none-any.whl#md5=6d4e8240194bfbf402b27e676b842225
+# bb_www_tarball: https://pypi.python.org/packages/ac/bd/012f4042611755d561adde36f591b8118ac16423988071a57ef0e569e5a5/buildbot_www-0.9.0b1-py2-none-any.whl#md5=7c6657da911f543cbf186f0dd4c2cea8
+# bb_consoleview_tarball: https://pypi.python.org/packages/b5/de/893cfaa6519690a28044391bf250c5fd421e6dadc107211e6a3e65b859cf/buildbot_console_view-0.9.0b1-py2-none-any.whl#md5=de442fb4a9c5181954e3388a35c55dde
+
+bb_master_tarball: https://pypi.python.org/packages/1d/49/08e269242c253daca67a2a853c807780ec247c0a8de27d594e9833af2faf/buildbot-0.9.0b9.tar.gz
+bb_slave_tarball: https://pypi.python.org/packages/45/d6/12d115c08959af2e8c99f7b2543f458c277f7ad0a6f8bf9415d232381927/buildbot-worker-0.9.0b9.tar.gz#md5=54f6090aff48873883860ce805e2ba9d
+bb_waterfall_tarball: https://pypi.python.org/packages/72/d9/7ad9495929211a082e7e6798fe8dd491cc74459819da185c34135d961f60/buildbot_waterfall_view-0.9.0b9-py2-none-any.whl#md5=93fbc34706cc9fc387522a20f75fd6c3
+bb_www_tarball: https://pypi.python.org/packages/2f/91/63e76ad6c95ede1993a90464d8123504d217755757e86b6872cb161de955/buildbot_www-0.9.0b9-py2-none-any.whl#md5=2671580781b92acf6b239927da3229a6
+bb_consoleview_tarball: https://pypi.python.org/packages/21/10/e8195174c2c41dadcf6770796ed3138388a48e51c6645e765f0989862833/buildbot_console_view-0.9.0b9-py2-none-any.whl#md5=9441a0e0f3bc72c983e128ea05d92484
