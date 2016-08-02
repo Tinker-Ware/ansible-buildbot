@@ -15,7 +15,7 @@ c = BuildmasterConfig = {}
 # The 'slaves' list defines the set of recognized buildslaves. Each element is
 # a BuildSlave object, specifying a unique slave name and password.  The same
 # slave name and password must be configured on the slave.
-c['slaves'] = [buildslave.BuildSlave("example-slave", "pass")]
+c['slaves'] = [buildslave.BuildSlave("{{ slave_username }}", "{{ slave_pass }}")]
 
 # 'protocols' contains information about protocols which master will use for
 # communicating with slaves.
@@ -23,7 +23,7 @@ c['slaves'] = [buildslave.BuildSlave("example-slave", "pass")]
 # with this protocol.
 # 'port' must match the value configured into the buildslaves (with their
 # --master option)
-c['protocols'] = {'pb': {'port': 9989}}
+c['protocols'] = {'pb': {'port': {{ master_port }} }}
 
 ####### CHANGESOURCES
 
@@ -72,7 +72,7 @@ factory.addStep(steps.ShellCommand(command=["trial", "pyflakes"]))
 c['builders'] = []
 c['builders'].append(
     util.BuilderConfig(name="runtests",
-      slavenames=["example-slave"],
+      slavenames=["{{ slave_username }}"],
       factory=factory))
 
 ####### STATUS TARGETS
@@ -89,8 +89,8 @@ c['status'] = []
 # installation's html.WebStatus home page (linked to the
 # 'titleURL') and is embedded in the title of the waterfall HTML page.
 
-c['title'] = "Pyflakes"
-c['titleURL'] = "https://launchpad.net/pyflakes"
+c['title'] = "{{ buildbot_title }}"
+c['titleURL'] = "{{ project_url }}"
 
 # the 'buildbotURL' string should point to the location where the buildbot's
 # internal web server (usually the html.WebStatus page) is visible. This
@@ -98,10 +98,10 @@ c['titleURL'] = "https://launchpad.net/pyflakes"
 # with an externally-visible host name which the buildbot cannot figure out
 # without some help.
 
-c['buildbotURL'] = "http://192.168.33.20:8020/"
+c['buildbotURL'] = "{{ buildbot_url }}"
 
 # minimalistic config to activate new web UI
-c['www'] = dict(port=8020,
+c['www'] = dict(port={{ buildbot_web_port }},
                 plugins=dict(waterfall_view={}, console_view={}))
 
 ####### DB URL
