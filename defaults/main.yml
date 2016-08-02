@@ -1,13 +1,15 @@
 ---
-# user: vagrant
-# master_name: master
-# master_host: localhost
-# master_port: 9989
+user: user
+master_name: master
+master_host: localhost
+master_port: 9989
+buildbot_path: "{{ ansible_env.HOME }}/buildbot"
+buildbot_url: http://localhost:8010/
+buildbot_title: Buildbot
+buildbot_web_port: 8010
+project_url: http://divmod.org/trac/wiki/DivmodPyflakes
+master_config_file: master.cfg
+
 # slave_name: slave
 # slave_username: example-slave
 # slave_pass: pass
-# buildbot_path: "{{ ansible_env.HOME }}/buildbot"
-# buildbot_url: http://localhost:8010/
-# buildbot_title: Tinkerware
-# buildbot_web_port: 8010
-# project_url: http://divmod.org/trac/wiki/DivmodPyflakes
