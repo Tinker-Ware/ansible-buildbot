@@ -43,7 +43,7 @@
   template:
     src=master.cfg.0.9
     dest={{ buildbot_path }}/{{ master_name }}/master.cfg
-    owner={{ user }}
+    owner={{ buildbot_user }}
   register: master_config
   notify: start_master
   when: master_name is defined
@@ -56,7 +56,7 @@
   copy:
     src={{ inventory_dir }}/host_files/{{ inventory_hostname }}/{{ master_config_file }}
     dest={{ buildbot_path }}/{{ master_name }}/master.cfg
-    owner={{ user }}
+    owner={{ buildbot_user }}
   when: p.stat.exists
 
 - name: (re)start_master
