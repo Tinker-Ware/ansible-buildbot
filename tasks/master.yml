@@ -38,6 +38,8 @@
     creates="{{ buildbot_path }}/{{ master_name }}"
   when: master_name is defined
   register: master_creation
+  sudo: yes
+  sudo_user: "{{ buildbot_user }}"
 
 - name: Configure master
   template:
