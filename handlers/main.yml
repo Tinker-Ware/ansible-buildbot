@@ -2,3 +2,5 @@
 - name: start_master
   command: buildbot restart {{ master_name }}
     chdir="{{ buildbot_path }}"
+  sudo: yes
+  sudo_user: "{{ buildbot_user }}"

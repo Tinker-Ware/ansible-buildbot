@@ -39,8 +39,12 @@
     creates="{{ buildbot_path }}/{{ slave_name }}"
   when: slave_name is defined
   register: slave_creation
+  sudo: yes
+  sudo_user: "{{ buildbot_user }}"
 
 - name: (re)start_slave
   command: buildslave restart {{ slave_name }}
     chdir="{{ buildbot_path }}"
   when: slave_name is defined
+  sudo: yes
+  sudo_user: "{{ buildbot_user }}"
