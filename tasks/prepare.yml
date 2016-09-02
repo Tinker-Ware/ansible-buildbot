@@ -5,5 +5,9 @@
 
 - name: Ensure directory for Buildbot is there
   file:
-    dest: "{{ buildbot_path }}"
+    path: "{{ buildbot_path }}"
+    owner: "{{ buildbot_user }}"
+    group: "{{ buildbot_group  }}"
+    mode: 0755
     state: directory
+  sudo: true
