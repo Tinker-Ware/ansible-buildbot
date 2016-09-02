@@ -49,6 +49,9 @@
   register: master_config
   notify: start_master
   when: master_name is defined
+  sudo: yes
+  sudo_user: "{{ buildbot_user }}"
+
 
 - name: Verify if a configuration for buildbot master exists.
   local_action: stat path="{{ inventory_dir }}/host_files/{{ inventory_hostname }}/{{ master_config_file }}"
