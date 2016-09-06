@@ -1,6 +1,12 @@
 ---
-- name: start_master
+- name: restart buildbot master
   command: buildbot restart {{ master_name }}
+    chdir="{{ buildbot_path }}"
+  sudo: yes
+  sudo_user: "{{ buildbot_user }}"
+
+- name: restart buildbot slave
+  command: buildslave restart {{ slave_name }}
     chdir="{{ buildbot_path }}"
   sudo: yes
   sudo_user: "{{ buildbot_user }}"
