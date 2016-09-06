@@ -1,29 +1,41 @@
-- name: Download BB9
+- name: Master | Ensure necesary directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ buildbot_user }}"
+    group: "{{ buildbot_group }}"
+  with_items:
+    - /opt/buildbot9
+    - /usr/local/src/buildbot
+  sudo: yes
+
+- name: Master | Download BB9
   get_url:
     url="{{ bb_master_tarball }}"
-    dest=/tmp/bb9.tar.gz
+    dest=/usr/local/src/buildbot/bb9.tar.gz
+  sudo: yes
 
-- name: Ensure directory for untar
-  file:
-    path: "/tmp/bb9"
-    state: directory
-
-- name: Untar BB9
+- name: Master | Untar BB9
   unarchive:
-    src=/tmp/bb9.tar.gz
-    dest=/tmp/bb9/
+    src=/usr/local/src/buildbot/bb9.tar.gz
+    dest=/opt/buildbot9/
+    creates=/opt/buildbot9/buildbot-0.9.0b9
+  sudo: yes
+  sudo_user: "{{ buildbot_user }}"
 
-- name: build bb9
+- name: Master | build bb9
   command: python setup.py build
-    chdir="/tmp/bb9/buildbot-0.9.0b9"
+    chdir=/opt/buildbot9/buildbot-0.9.0b9
+    creates=/opt/buildbot9/buildbot-0.9.0b9/build
   sudo: yes
 
-- name: install bb9
+- name: Master | install bb9
   command: python setup.py install
-    chdir="/tmp/bb9/buildbot-0.9.0b9"
+    chdir="/opt/buildbot9/buildbot-0.9.0b9"
+    creates=/opt/buildbot9/buildbot-0.9.0b9/dist
   sudo: yes
 
-- name: Download packages for Upgrade
+- name: Master | Download packages for Upgrade
   pip:
     name={{ item }}
   with_items:
@@ -32,7 +44,7 @@
     - "{{ bb_consoleview_tarball }}"
   sudo: true
 
-- name: Create master
+- name: Master | Create master
   command: buildbot create-master {{ master_name }}
     chdir="{{ buildbot_path }}"
     creates="{{ buildbot_path }}/{{ master_name }}"
@@ -41,7 +53,7 @@
   sudo: yes
   sudo_user: "{{ buildbot_user }}"
 
-- name: Configure master
+- name: Master | Configure master
   template:
     src=master.cfg.0.9
     dest={{ buildbot_path }}/{{ master_name }}/master.cfg
@@ -51,13 +63,14 @@
   when: master_name is defined
   sudo: yes
   sudo_user: "{{ buildbot_user }}"
+  notify:
+    - restart buildbot master
 
-
-- name: Verify if a configuration for buildbot master exists.
+- name: Master | Verify if a configuration for buildbot master exists.
   local_action: stat path="{{ inventory_dir }}/host_files/{{ inventory_hostname }}/{{ master_config_file }}"
   register: p
 
-- name: Add master config file
+- name: Master | Add master config file
   copy:
     src={{ inventory_dir }}/host_files/{{ inventory_hostname }}/{{ master_config_file }}
     dest={{ buildbot_path }}/{{ master_name }}/master.cfg
@@ -65,10 +78,5 @@
   when: p.stat.exists
   sudo: yes
   sudo_user: "{{ buildbot_user }}"
-
-- name: (re)start_master
-  command: buildbot restart {{ master_name }}
-    chdir="{{ buildbot_path }}"
-  when: master_name is defined
-  sudo: yes
-  sudo_user: "{{ buildbot_user }}"
+  notify:
+    - restart buildbot master

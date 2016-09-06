@@ -1,30 +1,42 @@
 ---
-- name: Download BB9
+- name: Slave | Ensure directory for untar
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ buildbot_user }}"
+    group: "{{ buildbot_group }}"
+  with_items:
+    - /opt/buildbot9
+    - /usr/local/src/buildbot
+  sudo: yes
+
+- name: Slave | Download BB9
   get_url:
     url="{{ bb_slave_tarball }}"
-    dest=/tmp/bb9slave.tar.gz
+    dest=/usr/local/src/buildbot/bb9slave.tar.gz
+  sudo: yes
 
-- name: Ensure directory for untar
-  file:
-    path: "/tmp/bb9"
-    state: directory
-
-- name: Untar BB9
+- name: Slave | Untar BB9
   unarchive:
-    src=/tmp/bb9slave.tar.gz
-    dest=/tmp/bb9/
+    src=/usr/local/src/buildbot/bb9slave.tar.gz
+    dest=/opt/buildbot9/
+    creates=/opt/buildbot9/buildbot-worker-0.9.0b9
+  sudo: yes
+  sudo_user: "{{ buildbot_user }}"
 
-- name: build bb9
+- name: Slave | build bb9
   command: python setup.py build
-    chdir="/tmp/bb9/buildbot-worker-0.9.0b9"
+    chdir=/opt/buildbot9/buildbot-worker-0.9.0b9
+    creates=/opt/buildbot9/buildbot-worker-0.9.0b9/build
   sudo: yes
 
-- name: install bb9
+- name: Slave | install bb9
   command: python setup.py install
-    chdir="/tmp/bb9/buildbot-worker-0.9.0b9"
+    chdir=/opt/buildbot9/buildbot-worker-0.9.0b9
+    creates=/opt/buildbot9/buildbot-worker-0.9.0b9/dist
   sudo: yes
 
-- name: Download packages for Upgrade
+- name: Slave | Download packages for Upgrade
   pip:
     name={{ item }}
   with_items:
@@ -33,7 +45,7 @@
     - "{{ bb_consoleview_tarball }}"
   sudo: true
 
-- name: Create slave
+- name: Slave | Create slave
   command: buildslave create-slave {{ slave_name }} {{ master_host }}:{{ master_port }} {{ slave_username }} {{ slave_pass }}
     chdir="{{ buildbot_path }}"
     creates="{{ buildbot_path }}/{{ slave_name }}"
@@ -41,10 +53,5 @@
   register: slave_creation
   sudo: yes
   sudo_user: "{{ buildbot_user }}"
-
-- name: (re)start_slave
-  command: buildslave restart {{ slave_name }}
-    chdir="{{ buildbot_path }}"
-  when: slave_name is defined
-  sudo: yes
-  sudo_user: "{{ buildbot_user }}"
+  notify:
+    - restart buildbot slave
