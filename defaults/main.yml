@@ -1,5 +1,6 @@
 ---
-buildbot_user: user
+buildbot_user: buildbot
+buildbot_group: buildbot
 master_name: master
 master_host: localhost
 master_port: 9989
