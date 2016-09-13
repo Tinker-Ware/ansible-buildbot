@@ -16,11 +16,20 @@
     dest=/usr/local/src/buildbot/bb9slave.tar.gz
   sudo: yes
 
-- name: Slave | Untar BB9
-  unarchive:
-    src=/usr/local/src/buildbot/bb9slave.tar.gz
-    dest=/opt/buildbot9/
-    creates=/opt/buildbot9/buildbot-worker-0.9.0b9
+# - name: Slave | Untar BB9
+#   unarchive:
+#     src=/usr/local/src/buildbot/bb9slave.tar.gz
+#     dest=/opt/buildbot9/
+#     creates=/opt/buildbot9/buildbot-worker-0.9.0b9
+#   sudo: yes
+#   sudo_user: "{{ buildbot_user }}"
+
+- name: Extract tarball
+  command: "tar xzf /usr/local/src/buildbot/bb9slave.tar.gz"
+  args:
+    creates: "/opt/buildbot9/buildbot-worker-0.9.0b9"
+    chdir: /opt/buildbot9
+    timeout: 4000
   sudo: yes
   sudo_user: "{{ buildbot_user }}"
 
