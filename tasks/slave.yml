@@ -27,7 +27,6 @@
 - name: Extract tarball
   command: "tar xzf /usr/local/src/buildbot/bb9slave.tar.gz"
   args:
-    creates: "/opt/buildbot9/buildbot-worker-0.9.0b9"
     chdir: /opt/buildbot9
     timeout: 4000
   sudo: yes
@@ -35,14 +34,14 @@
 
 - name: Slave | build bb9
   command: python setup.py build
-    chdir=/opt/buildbot9/buildbot-worker-0.9.0b9
-    creates=/opt/buildbot9/buildbot-worker-0.9.0b9/build
+    chdir="/opt/buildbot9/{{ bb_slave_tarball | basename | regex_replace('\.tar\.gz', '') }}"
+    creates="/opt/buildbot9/{{ bb_slave_tarball | basename | regex_replace('\.tar\.gz', '') }}/build"
   sudo: yes
 
 - name: Slave | install bb9
   command: python setup.py install
-    chdir=/opt/buildbot9/buildbot-worker-0.9.0b9
-    creates=/opt/buildbot9/buildbot-worker-0.9.0b9/dist
+    chdir="/opt/buildbot9/{{ bb_slave_tarball | basename | regex_replace('\.tar\.gz', '') }}"
+    creates="/opt/buildbot9/{{ bb_slave_tarball | basename | regex_replace('\.tar\.gz', '') }}/dist"
   sudo: yes
 
 - name: Slave | Download packages for Upgrade
