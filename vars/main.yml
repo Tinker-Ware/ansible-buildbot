@@ -1,6 +1,6 @@
 ---
 #.TAR.GZ
-bb_master_tarball: https://pypi.io/packages/source/b/buildbot/buildbot-0.9.0rc1.tar.gz
+bb_master_tarball: https://pypi.io/packages/source/b/buildbot/buildbot-0.9.0rc3.tar.gz
 bb_slave_tarball: https://pypi.python.org/packages/54/bc/00a23bc1d324ab2e84d8b2d95e853c0d36615aaf7c0872c03d96d7ab332b/buildbot-worker-0.9.0rc3.tar.gz
 #md5=1fe9a7303bbe80ada30e82d7297b4613
 #.WHL
