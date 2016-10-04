@@ -30,6 +30,20 @@
   sudo: yes
   sudo_user: "{{ buildbot_user }}"
 
+
+- name: Master | Verify if a configuration for buildbot master exists.
+  local_action: stat path="{{ inventory_dir }}/host_files/{{ inventory_hostname }}/{{ master_config_file }}"
+  register: p
+
+- name: Master | Add master config file
+  copy:
+    src={{ inventory_dir }}/host_files/{{ inventory_hostname }}/{{ master_config_file }}
+    dest={{ buildbot_path }}/{{ master_name }}/master.cfg
+    owner={{ buildbot_user }}
+  when: p.stat.exists
+  sudo: yes
+  sudo_user: "{{ buildbot_user }}"
+
 - name: Start master
   command: buildbot restart {{ master_name }}
     chdir="{{ buildbot_path }}"
