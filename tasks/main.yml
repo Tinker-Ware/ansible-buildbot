@@ -1,5 +1,4 @@
 ---
-
 - name: Install Buildbot CI
   apt: name=buildbot state=present
   sudo: true
@@ -24,7 +23,7 @@
   template:
     src=master.cfg
     dest={{ buildbot_path }}/{{ master_name }}/master.cfg
-    owner={{ user }}
+    owner={{ buildbot_user }}
   when: master_creation|success
   register: master_config
   sudo: yes
