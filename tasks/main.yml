@@ -1,4 +1,10 @@
 ---
+- name: Install python-sqlalchemy
+  apt:
+    name: python-sqlalchemy=0.9.8+dfsg-0.1
+    state: present
+  sudo: true
+
 - name: Install Buildbot CI
   apt: name=buildbot state=present
   sudo: true
