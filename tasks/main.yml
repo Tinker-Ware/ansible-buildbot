@@ -48,6 +48,13 @@
     state: present
   become: true
 
+- name: Install Buildbot buildbot-worker
+  pip: 
+    name: buildbot-worker
+    executable: pip3
+    state: present
+  become: true
+
 - name: Ensure directory for Buildbot is there
   file:
     dest: "{{ buildbot_path }}"
@@ -96,7 +103,7 @@
   become_user: "{{ buildbot_user }}"
 
 - name: Create slave
-  command: buildslave create-slave {{ slave_name }} {{ master_host }}:{{ master_port }} {{ slave_username }} {{ slave_pass }}
+  command: buildbot-worker create-worker {{ slave_name }} {{ master_host }}:{{ master_port }} {{ slave_username }} {{ slave_pass }}
     chdir="{{ buildbot_path }}"
     creates="{{ buildbot_path }}/{{ slave_name }}"
   when: slave_name is defined
@@ -105,7 +112,7 @@
   become_user: "{{ buildbot_user }}"
 
 - name: Start slave
-  command: buildslave restart slave
+  command: buildbot-worker restart slave
     chdir="{{ buildbot_path }}"
   when: slave_creation|success
   become: yes
