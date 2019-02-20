@@ -1,13 +1,32 @@
 ---
+- name: Ensure pip is installed
+  apt: 
+    name=python3-pip
+    state=present
+  become: true
+  
 - name: Install python-sqlalchemy
-  apt:
-    name: python-sqlalchemy=0.9.8+dfsg-0.1
+  pip:
+    executable: pip3
+    name: sqlalchemy
     state: present
   become: true
 
-- name: Install Buildbot CI
-  apt: name=buildbot state=present
+- name: Install sqlalchemy-migrate
+  pip:
+    name: sqlalchemy-migrate
+    executable: pip3
+    state: present
   become: true
+
+
+- name: Install Buildbot CI
+  pip: 
+    name: buildbot==1.6.0
+    executable: pip3
+    state: present
+  become: true
+
 
 - name: Ensure directory for Buildbot is there
   file:
