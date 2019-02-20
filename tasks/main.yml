@@ -27,6 +27,26 @@
     state: present
   become: true
 
+- name: Install Buildbot plugin buildbot-www
+  pip: 
+    name: buildbot-www
+    executable: pip3
+    state: present
+  become: true
+
+- name: Install Buildbot plugin buildbot-waterfall-view
+  pip: 
+    name: buildbot-waterfall-view
+    executable: pip3
+    state: present
+  become: true
+
+- name: Install Buildbot plugin buildbot-console-view
+  pip: 
+    name: buildbot-console-view
+    executable: pip3
+    state: present
+  become: true
 
 - name: Ensure directory for Buildbot is there
   file:
