@@ -5,20 +5,13 @@
     state=present
   become: true
   
-- name: Install python-sqlalchemy
+- name: Install buildbot sql dependencies
   pip:
-    executable: pip3
-    name: sqlalchemy
-    state: present
-  become: true
-
-- name: Install sqlalchemy-migrate
-  pip:
-    name: sqlalchemy-migrate
+    name: "{{ item }}"
     executable: pip3
     state: present
+  with_items: "{{ buildbot_sql_dependencies }}"
   become: true
-
 
 - name: Install Buildbot CI
   pip: 
