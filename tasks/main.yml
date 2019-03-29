@@ -1,20 +1,46 @@
 ---
-- name: Install python-sqlalchemy
-  apt:
-    name: python-sqlalchemy=0.9.8+dfsg-0.1
+- name: Ensure pip is installed
+  apt: 
+    name=python3-pip
+    state=present
+  become: true
+  
+- name: Install buildbot sql dependencies
+  pip:
+    name: "{{ item }}"
+    executable: pip3
     state: present
-  sudo: true
+  with_items: "{{ buildbot_sql_dependencies }}"
+  become: true
 
 - name: Install Buildbot CI
-  apt: name=buildbot state=present
-  sudo: true
+  pip: 
+    name: buildbot==1.6.0
+    executable: pip3
+    state: present
+  become: true
+
+- name: Install Buildbot plugins
+  pip: 
+    name: "{{ item }}"
+    executable: pip3
+    state: present
+  with_items: "{{ buildbot_plugins }}"
+  become: true
+
+- name: Install Buildbot buildbot-worker
+  pip: 
+    name: buildbot-worker
+    executable: pip3
+    state: present
+  become: true
 
 - name: Ensure directory for Buildbot is there
   file:
     dest: "{{ buildbot_path }}"
     state: directory
-  sudo: yes
-  sudo_user: "{{ buildbot_user }}"
+  become: yes
+  become_user: "{{ buildbot_user }}"
 
 - name: Create master
   command: buildbot create-master {{ master_name }}
@@ -22,8 +48,8 @@
     creates="{{ buildbot_path }}/{{ master_name }}"
   when: master_name is defined
   register: master_creation
-  sudo: yes
-  sudo_user: "{{ buildbot_user }}"
+  become: yes
+  become_user: "{{ buildbot_user }}"
 
 - name: Configure master
   template:
@@ -32,8 +58,8 @@
     owner={{ buildbot_user }}
   when: master_creation|success
   register: master_config
-  sudo: yes
-  sudo_user: "{{ buildbot_user }}"
+  become: yes
+  become_user: "{{ buildbot_user }}"
 
 
 - name: Master | Verify if a configuration for buildbot master exists.
@@ -46,28 +72,28 @@
     dest={{ buildbot_path }}/{{ master_name }}/master.cfg
     owner={{ buildbot_user }}
   when: p.stat.exists
-  sudo: yes
-  sudo_user: "{{ buildbot_user }}"
+  become: yes
+  become_user: "{{ buildbot_user }}"
 
 - name: Start master
   command: buildbot restart {{ master_name }}
     chdir="{{ buildbot_path }}"
   when: master_config|success
-  sudo: yes
-  sudo_user: "{{ buildbot_user }}"
+  become: yes
+  become_user: "{{ buildbot_user }}"
 
 - name: Create slave
-  command: buildslave create-slave {{ slave_name }} {{ master_host }}:{{ master_port }} {{ slave_username }} {{ slave_pass }}
+  command: buildbot-worker create-worker {{ slave_name }} {{ master_host }}:{{ master_port }} {{ slave_username }} {{ slave_pass }}
     chdir="{{ buildbot_path }}"
     creates="{{ buildbot_path }}/{{ slave_name }}"
   when: slave_name is defined
   register: slave_creation
-  sudo: yes
-  sudo_user: "{{ buildbot_user }}"
+  become: yes
+  become_user: "{{ buildbot_user }}"
 
 - name: Start slave
-  command: buildslave restart slave
+  command: buildbot-worker restart slave
     chdir="{{ buildbot_path }}"
   when: slave_creation|success
-  sudo: yes
-  sudo_user: "{{ buildbot_user }}"
+  become: yes
+  become_user: "{{ buildbot_user }}"

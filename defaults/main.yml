@@ -11,3 +11,12 @@ buildbot_url: http://localhost:8010/
 buildbot_title: Tinkerware
 buildbot_web_port: 8010
 master_config_file: master.cfg
+
+buildbot_sql_dependencies:
+  - sqlalchemy
+  - sqlalchemy-migrate
+
+buildbot_plugins:
+  - buildbot-www
+  - buildbot-waterfall-view
+  - buildbot-console-view
