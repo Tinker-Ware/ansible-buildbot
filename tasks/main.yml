@@ -1,12 +1,38 @@
 ---
-- name: Install python-sqlalchemy
-  apt:
-    name: python-sqlalchemy=0.9.8+dfsg-0.1
+- name: Ensure pip is installed
+  apt: 
+    name=python3-pip
+    state=present
+  become: true
+  
+- name: Install buildbot sql dependencies
+  pip:
+    name: "{{ item }}"
+    executable: pip3
     state: present
+  with_items: "{{ buildbot_sql_dependencies }}"
   become: true
 
 - name: Install Buildbot CI
-  apt: name=buildbot state=present
+  pip: 
+    name: buildbot==1.6.0
+    executable: pip3
+    state: present
+  become: true
+
+- name: Install Buildbot plugins
+  pip: 
+    name: "{{ item }}"
+    executable: pip3
+    state: present
+  with_items: "{{ buildbot_plugins }}"
+  become: true
+
+- name: Install Buildbot buildbot-worker
+  pip: 
+    name: buildbot-worker
+    executable: pip3
+    state: present
   become: true
 
 - name: Ensure directory for Buildbot is there
@@ -57,7 +83,7 @@
   become_user: "{{ buildbot_user }}"
 
 - name: Create slave
-  command: buildslave create-slave {{ slave_name }} {{ master_host }}:{{ master_port }} {{ slave_username }} {{ slave_pass }}
+  command: buildbot-worker create-worker {{ slave_name }} {{ master_host }}:{{ master_port }} {{ slave_username }} {{ slave_pass }}
     chdir="{{ buildbot_path }}"
     creates="{{ buildbot_path }}/{{ slave_name }}"
   when: slave_name is defined
@@ -66,7 +92,7 @@
   become_user: "{{ buildbot_user }}"
 
 - name: Start slave
-  command: buildslave restart slave
+  command: buildbot-worker restart slave
     chdir="{{ buildbot_path }}"
   when: slave_creation|success
   become: yes
